@@ -68,44 +68,26 @@ jobs:
 
       - name: Build production bundle
         env:
-          VITE_API_URL: ${{ secrets.VITE_API_URL }}
+          # VITE_ variables are inlined into the client bundle at build time.
+          # App IDs are not sensitive — they are public Algorand contract addresses.
           VITE_NETWORK: testnet
           VITE_ALGOD_SERVER: https://testnet-api.algonode.cloud
-          VITE_KYC_REGISTRY_APP_ID: ${{ secrets.VITE_KYC_REGISTRY_APP_ID }}
-          VITE_CREDIT_SCORE_APP_ID: ${{ secrets.VITE_CREDIT_SCORE_APP_ID }}
-          VITE_LENDING_POOL_APP_ID: ${{ secrets.VITE_LENDING_POOL_APP_ID }}
-          VITE_LOAN_MANAGER_APP_ID: ${{ secrets.VITE_LOAN_MANAGER_APP_ID }}
-          VITE_REPAYMENT_ESCROW_APP_ID: ${{ secrets.VITE_REPAYMENT_ESCROW_APP_ID }}
-          VITE_WC_PROJECT_ID: ${{ secrets.VITE_WC_PROJECT_ID }}
+          VITE_KYC_REGISTRY_APP_ID: "759379619"
+          VITE_CREDIT_SCORE_APP_ID: "759379629"
+          VITE_LENDING_POOL_APP_ID: "759454547"
+          VITE_LOAN_MANAGER_APP_ID: "759454548"
+          VITE_REPAYMENT_ESCROW_APP_ID: "759379632"
+          # VITE_API_URL — set this in the Vercel project dashboard,
+          # not here, so it can differ between preview and production.
         run: npm run build
 
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: frontend-dist
-          path: frontend/dist
-          retention-days: 1
-
-  # ── Deploy to Vercel (main branch only) ──────────────────────────────────────
-  deploy:
-    name: Deploy to Vercel
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.url }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Deploy to Vercel
-        id: deploy
-        uses: amondnet/vercel-action@v25
-        with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: frontend
-          vercel-args: "--prod"
+  # ── Deployment ────────────────────────────────────────────────────────────────
+  # Deployment is handled by Vercel's native GitHub App integration.
+  # No tokens or GitHub secrets are needed.
+  #
+  # Setup (one-time):
+  #   1. Go to vercel.com → Add New Project → Import AdityaWagh19/Credencia
+  #   2. Set Root Directory to: frontend
+  #   3. Set Framework Preset to: Vite
+  #   4. Add VITE_API_URL env var pointing to your Railway API URL
+  #   5. Deploy — Vercel auto-deploys on every push to main going forward
