@@ -521,24 +521,25 @@ flowchart LR
         PR["Pull Request /\nPush to main"]
     end
 
+    subgraph GitHubActions["GitHub Actions (Quality Gates)"]
+        GLint["Lint & Security Audit"]
+        GSmoke["Smoke Test (API health)"]
+        GDocker["Docker Build Validation"]
+        GLint --> GSmoke --> GDocker
+    end
+
     subgraph VercelCI["Vercel (Frontend CI/CD)"]
-        VB["Install deps\nnpm install"]
-        VT["Type check\nnpm run lint"]
-        VBuild["Build\nnpm run build"]
-        VDeploy["Deploy to CDN\n(preview or production)"]
-        VB --> VT --> VBuild --> VDeploy
+        VBuild["Build & Deploy to CDN"]
     end
 
-    subgraph RailwayCI["Railway (Backend CI/CD)"]
-        RB["Docker build\nDockerfile"]
-        RDeploy["Rolling deploy\nAPI + Oracle + Jobs"]
-        RB --> RDeploy
+    subgraph RailwayCI["Railway (Backend Native Integration)"]
+        RDeploy["Auto-Deploy API + Oracle + Jobs"]
     end
 
+    PR --> GitHubActions
     PR --> VercelCI
     PR --> RailwayCI
 ```
-
 ### Railway Setup
 
 1. Create a Railway project and connect the GitHub repository.
