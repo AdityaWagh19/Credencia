@@ -55,7 +55,7 @@ export default function Dashboard() {
   );
 
   // Pool not deployed yet
-  const poolNotDeployed = (pool as any)?.message;
+  const poolNotDeployed = (pool as (PoolStats & { message?: string }) | null)?.message;
 
   return (
     <div className="space-y-8">

@@ -1,8 +1,8 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 /** Reveals element on scroll-into-view via IntersectionObserver. */
-export function Reveal({ children, delay = 0, className = '', as: As = 'div' }: { children: React.ReactNode; delay?: number; className?: string; as?: any }) {
-  const ref = useRef<HTMLElement | null>(null);
+export function Reveal({ children, delay = 0, className = '', as: As = 'div' }: { children: React.ReactNode; delay?: number; className?: string; as?: React.ElementType }) {
+  const ref = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     const el = ref.current; if (!el) return;
     const io = new IntersectionObserver(([entry]) => {
@@ -14,5 +14,5 @@ export function Reveal({ children, delay = 0, className = '', as: As = 'div' }: 
     io.observe(el);
     return () => io.disconnect();
   }, [delay]);
-  return <As ref={ref as any} className={`reveal ${className}`}>{children}</As>;
+  return <As ref={ref} className={`reveal ${className}`}>{children}</As>;
 }

@@ -14,10 +14,11 @@ interface Props {
 
 /** Magnetic CTA — pulls toward cursor on hover. */
 export function MagneticButton({ to, href, onClick, children, variant = 'ink', className = '', type = 'button', disabled }: Props) {
-  const ref = useRef<HTMLButtonElement | HTMLAnchorElement | null>(null);
+  const linkRef = useRef<HTMLAnchorElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    const el = ref.current;
+    const el = linkRef.current ?? buttonRef.current;
     if (!el) return;
     const STRENGTH = 0.28;
     const onMove = (e: MouseEvent) => {
@@ -37,7 +38,7 @@ export function MagneticButton({ to, href, onClick, children, variant = 'ink', c
 
   const cls = `magnetic ${variant === 'ink' ? 'pill-ink' : 'pill-ghost'} ${disabled ? 'opacity-50 pointer-events-none' : ''} ${className}`;
 
-  if (to) return <Link to={to} ref={ref as any} className={cls} onClick={onClick}>{children}</Link>;
-  if (href) return <a href={href} ref={ref as any} className={cls} onClick={onClick}>{children}</a>;
-  return <button ref={ref as any} type={type} onClick={onClick} className={cls} disabled={disabled}>{children}</button>;
+  if (to) return <Link to={to} ref={linkRef} className={cls} onClick={onClick}>{children}</Link>;
+  if (href) return <a href={href} ref={linkRef} className={cls} onClick={onClick}>{children}</a>;
+  return <button ref={buttonRef} type={type} onClick={onClick} className={cls} disabled={disabled}>{children}</button>;
 }

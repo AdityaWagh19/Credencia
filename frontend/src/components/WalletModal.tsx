@@ -118,19 +118,20 @@ export function WalletModal({ open, onClose }: { open: boolean; onClose: () => v
       toast.success(`Connected: ${address.slice(0, 8)}…`);
       onClose();
       nav('/app/dashboard');
-    } catch (e: any) {
+    } catch (e: unknown) {
       // Handle user rejection gracefully
+      const err = e as { message?: string; data?: { type?: string }; response?: { data?: { error?: string } } };
       if (
-        e?.message?.includes('cancelled') ||
-        e?.message?.includes('rejected') ||
-        e?.data?.type === 'CONNECT_CANCELLED' ||
-        e?.data?.type === 'SIGN_DATA_VERIFICATION_FAILED'
+        err?.message?.includes('cancelled') ||
+        err?.message?.includes('rejected') ||
+        err?.data?.type === 'CONNECT_CANCELLED' ||
+        err?.data?.type === 'SIGN_DATA_VERIFICATION_FAILED'
       ) {
         toast.info('Wallet connection cancelled.');
         setStage('select');
         return;
       }
-      const msg = e?.response?.data?.error ?? e?.message ?? 'Connection failed';
+      const msg = err?.response?.data?.error ?? err?.message ?? 'Connection failed';
       console.error('[WalletModal] Auth error:', msg, e);
       setError(msg.includes('nonce') ? 'Session expired — please try again.' : msg);
       setStage('error');

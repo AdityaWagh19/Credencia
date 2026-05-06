@@ -88,8 +88,9 @@ export default function Kyc() {
       toast.success('KYC submitted! Awaiting verification.');
       setAuth({ kycStatus: 'pending', role });
       await refresh();
-    } catch (e: any) {
-      toast.error(e?.response?.data?.error ?? e.message);
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { error?: string } }; message?: string };
+      toast.error(err?.response?.data?.error ?? err?.message);
     } finally {
       setSubmitting(false);
     }

@@ -315,7 +315,7 @@ export default function Borrow() {
                     </div>
                     {l.status === 'rejected' && (
                       <div className="mt-2 text-xs text-destructive bg-destructive/10 px-3 py-2 rounded-lg">
-                        {(l as any).rejection_reason || 'Rejected due to low credit score or pool limits'}
+                        {(l as Loan & { rejection_reason?: string }).rejection_reason || 'Rejected due to low credit score or pool limits'}
                       </div>
                     )}
                   </li>

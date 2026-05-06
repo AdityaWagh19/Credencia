@@ -81,8 +81,9 @@ export default function AdminLoans() {
         toast.success('Loan rejected');
       }
       refresh();
-    } catch (e: any) {
-      toast.error(e?.response?.data?.error ?? `${action} failed`);
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { error?: string } } };
+      toast.error(err?.response?.data?.error ?? `${action} failed`);
     }
   };
 
