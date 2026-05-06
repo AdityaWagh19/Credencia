@@ -19,6 +19,7 @@ const loanRoutes = require('./routes/loans');
 const poolRoutes = require('./routes/pool');
 
 const app = express();
+app.set('trust proxy', 1); // Trust Railway's reverse proxy for secure cookies
 
 // ── Middleware ──
 
