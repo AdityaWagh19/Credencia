@@ -1,5 +1,7 @@
 # Credencia — Decentralized Lending Protocol on Algorand
 
+**[Live Demo: credencia-platform.vercel.app](https://credencia-platform.vercel.app)**
+
 Credencia (formerly Cadencia CreditFlow) is a decentralised MSME lending platform built on the Algorand blockchain. It combines five interconnected on-chain smart contracts with an off-chain Node.js backend and a React/Vite frontend to deliver collateral-free credit, yield-bearing liquidity pools, and cryptographically verifiable credit scoring.
 
 > **Network:** Algorand Testnet
